@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-df = pd.read_csv("MovieDataSet.csv")
+df = pd.read_csv("data/MovieDataSet.csv")
 tfidf = TfidfVectorizer()
 
 encoding = []
@@ -31,4 +31,4 @@ for idx, row in df.iterrows():
     result = tfidf.fit_transform(document)
     encoding.append(result)
 df["encodings"] = encoding
-df.to_csv("MovieDataSet+Vectors.csv")
+df.to_csv("data/MovieDataSet+Vectors.csv")
