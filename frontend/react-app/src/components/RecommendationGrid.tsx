@@ -1,23 +1,17 @@
 import type { Recommendation } from '../types';
 
-// What this component needs from its parent
 interface Props {
-  recommendations: Recommendation[];  // List of movies to show
-  loading: boolean;                   // Whether we're fetching recommendations
-  error: string;                      // Error message (if any)
-  onRetry: () => void;               // Function to call when user clicks "Try Again"
+  recommendations: Recommendation[];
+  loading: boolean;
+  error: string;
+  onRetry: () => void;
 }
 
 /**
- * Recommendation Grid Component
- * 
- * Shows a grid of movie recommendation cards. Handles 3 states:
- * 1. Loading - shows skeleton cards
- * 2. Error - shows error message with retry button  
- * 3. Success - shows movie cards with titles, ratings, and IMDb links
+ * Displays movie recommendations in a responsive grid layout.
+ * Handles loading, error, and empty states.
  */
 export function RecommendationGrid({ recommendations, loading, error, onRetry }: Props) {
-  // Show loading animation with fake movie cards
   if (loading) {
     return (
       <div className="recommendation-grid">
@@ -34,7 +28,6 @@ export function RecommendationGrid({ recommendations, loading, error, onRetry }:
     );
   }
 
-  // Show error message with retry button
   if (error) {
     return (
       <div className="error-state">
@@ -46,7 +39,6 @@ export function RecommendationGrid({ recommendations, loading, error, onRetry }:
     );
   }
 
-  // Show message when no movies selected yet
   if (recommendations.length === 0) {
     return (
       <div className="empty-state">
@@ -55,7 +47,6 @@ export function RecommendationGrid({ recommendations, loading, error, onRetry }:
     );
   }
 
-  // Helper function to create IMDb URLs
   const getIMDbLink = (tconst?: string) => {
     return tconst ? `https://www.imdb.com/title/${tconst}/` : null;
   };
@@ -85,14 +76,11 @@ export function RecommendationGrid({ recommendations, loading, error, onRetry }:
               )}
             </div>
 
-            {/* Recommendation score */}
             {(movie.score || movie.similarity_score) && (
               <div className="similarity-score">
                 Match: {((movie.score || movie.similarity_score || 0) * 100).toFixed(0)}%
               </div>
             )}
-
-            {/* IMDb link */}
             {movie.tconst && (
               <a 
                 href={getIMDbLink(movie.tconst)!}

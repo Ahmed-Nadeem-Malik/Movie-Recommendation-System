@@ -8,11 +8,10 @@ A full-stack web application that recommends movies from IMDb's Top 5000 dataset
 Movie-Recommendation-System/
 ├── backend/                    # FastAPI backend service
 │   ├── main.py                # Application entry point
-│   ├── database.py            # PostgreSQL connection and setup
-│   ├── models.py              # SQLAlchemy database models
 │   ├── api/
 │   │   └── routes.py          # API endpoints for search and recommendations
-│   └── requirements.txt       # Python dependencies
+│   ├── core/                  # Configuration and settings
+│   └── utils/                 # Utility functions and recommender logic
 ├── frontend/
 │   └── react-app/             # React TypeScript frontend
 │       ├── src/
@@ -21,8 +20,11 @@ Movie-Recommendation-System/
 │       │   ├── hooks/         # Custom React hooks
 │       │   └── types.ts       # TypeScript type definitions
 │       └── package.json       # Node.js dependencies
-├── data/                      # IMDb dataset files
-└── notebooks/                 # Jupyter notebooks for data analysis
+├── data/                      # IMDb dataset files and database models
+│   ├── database.py            # PostgreSQL connection and setup
+│   └── models.py              # SQLAlchemy database models
+├── notebooks/                 # Jupyter notebooks for data analysis
+└── requirements.txt           # Python dependencies
 ```
 
 ## How It Works

@@ -2,14 +2,12 @@ import { useState } from 'react';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api/v1';
 
-// Simple cache for API responses
 const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 5 * 60 * 1000;
 
 export function useAPI() {
   const [abortController, setAbortController] = useState<AbortController | null>(null);
 
-  // Cancel any in-flight requests
   const cancelRequests = () => {
     if (abortController) {
       abortController.abort();
@@ -19,7 +17,6 @@ export function useAPI() {
     return newController;
   };
 
-  // Check cache for recent responses
   const getCached = (key: string) => {
     const cached = cache.get(key);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
@@ -29,12 +26,10 @@ export function useAPI() {
     return null;
   };
 
-  // Store response in cache
   const setCache = (key: string, data: any) => {
     cache.set(key, { data, timestamp: Date.now() });
   };
 
-  // Search movies with caching
   const searchMovies = async (query: string, limit: number = 10) => {
     if (!query || query.trim().length < 2) {
       return { results: [] };
@@ -65,7 +60,6 @@ export function useAPI() {
     }
   };
 
-  // Get recommendations with caching
   const getRecommendations = async (title: string, k: number = 10) => {
     const params = new URLSearchParams({
       title,
