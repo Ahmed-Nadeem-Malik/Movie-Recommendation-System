@@ -87,9 +87,9 @@ def search_movies(
         """
         WITH normalized_movies AS (
             SELECT 
-                id, primarytitle, startyear, averagerating,
+                "ID" as id, "primaryTitle" as primarytitle, "startYear" as startyear, "averageRating" as averagerating,
                 REGEXP_REPLACE(
-                    REGEXP_REPLACE(LOWER(primarytitle), '^(the|a|an)\\s+', ''), 
+                    REGEXP_REPLACE(LOWER("primaryTitle"), '^(the|a|an)\\s+', ''), 
                     '[^\\w\\s]', ' ', 'g'
                 ) AS normalized_title
             FROM movies
