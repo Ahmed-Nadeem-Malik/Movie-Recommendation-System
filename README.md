@@ -16,8 +16,13 @@ Movie-Recommendation-System/
 │   └── react-app/             # React TypeScript frontend
 │       ├── src/
 │       │   ├── App.tsx        # Main application component
+│       │   ├── App.css        # Main application styles
+│       │   ├── main.tsx       # React app entry point
 │       │   ├── components/    # Reusable UI components
+│       │   │   ├── MovieSearch.tsx
+│       │   │   └── RecommendationGrid.tsx
 │       │   ├── hooks/         # Custom React hooks
+│       │   │   └── useAPI.ts
 │       │   └── types.ts       # TypeScript type definitions
 │       └── package.json       # Node.js dependencies
 ├── data/                      # IMDb dataset files and database models
