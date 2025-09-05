@@ -2,6 +2,20 @@
 
 A full-stack web application that recommends movies from IMDb's Top 5000 dataset using content-based filtering with TF-IDF similarity scoring.
 
+## 🚀 Live Demo
+
+- **Frontend:** https://movie-recommendation-system-p41ucrff4.vercel.app/
+- **Backend API:** https://movie-recommendation-backend.fly.dev/
+- **API Documentation:** https://movie-recommendation-backend.fly.dev/docs
+
+## 📋 Features
+
+- **Smart Search:** Type movie titles with fuzzy matching and typo tolerance
+- **Content-Based Recommendations:** Get similar movies using TF-IDF and cosine similarity
+- **Real-time Results:** Debounced search with caching for optimal performance  
+- **Responsive Design:** Works on desktop and mobile devices
+- **Production Deployment:** Backend on Fly.io, Frontend on Vercel
+
 ## Project Structure
 
 ```
@@ -27,7 +41,10 @@ Movie-Recommendation-System/
 │       └── package.json       # Node.js dependencies
 ├── data/                      # IMDb dataset files and database models
 │   ├── database.py            # PostgreSQL connection and setup
-│   └── models.py              # SQLAlchemy database models
+│   ├── models.py              # SQLAlchemy database models
+│   ├── processing.py          # Data preprocessing scripts
+│   ├── MovieDataSet.csv       # IMDb movie dataset
+│   └── models/                # Pre-trained ML models (TF-IDF matrix, etc.)
 ├── notebooks/                 # Jupyter notebooks for data analysis
 └── requirements.txt           # Python dependencies
 ```
@@ -37,8 +54,8 @@ Movie-Recommendation-System/
 ### Backend Architecture
 
 **Database Layer:**
-- PostgreSQL database storing IMDb Top 5000 movies
-- Tables: movies (basic info), ratings (scores/votes), features (TF-IDF vectors)
+- PostgreSQL/Supabase database storing IMDb Top 5000 movies
+- Single movies table with all movie metadata
 - Uses PostgreSQL trigram similarity for fuzzy text search
 
 **API Layer (FastAPI):**
@@ -105,18 +122,20 @@ Movie-Recommendation-System/
 ## Technical Stack
 
 **Backend:**
-- Python 3.9+
+- Python 3.11+
 - FastAPI (web framework)
 - SQLAlchemy (ORM)
-- PostgreSQL (database)
+- PostgreSQL/Supabase (database)
 - scikit-learn (TF-IDF vectorization)
-- pandas (data processing)
+- pandas, numpy, scipy (data processing)
+- Deployed on Fly.io
 
 **Frontend:**
-- React 18 with TypeScript
+- React 19 with TypeScript
 - Vite (build tool)
 - CSS Grid (responsive layout)
 - Fetch API with AbortController (HTTP requests)
+- Deployed on Vercel
 
 ## Setup Instructions
 
@@ -147,6 +166,17 @@ echo "VITE_API_BASE=http://localhost:8000/api/v1" > .env
 npm run dev
 ```
 
+### Docker Deployment
+```bash
+# Deploy full application with docker-compose
+docker-compose up --build
+
+# Or deploy backend only 
+cd backend
+docker build -t movie-backend .
+docker run -p 8000:8000 -e DATABASE_URL="your_db_url" movie-backend
+```
+
 ### Database Setup
 1. Install PostgreSQL and create database
 2. Enable pg_trgm extension for trigram similarity
@@ -154,6 +184,22 @@ npm run dev
 4. Generate TF-IDF vectors and similarity matrices
 
 ## API Endpoints
+
+### GET /api/v1/movies/
+Get paginated list of all movies.
+
+**Parameters:**
+- `skip` (int): Number of movies to skip (default: 0)
+- `limit` (int): Number of movies to return (default: 10, max: 100)
+
+### GET /api/v1/movies/{movie_id}
+Get specific movie by ID.
+
+### GET /api/v1/movies/genre/{genre_name}
+Get movies filtered by genre.
+
+**Parameters:**
+- `limit` (int): Maximum results to return (default: 50, max: 100)
 
 ### GET /api/v1/search/
 Search for movies by title with fuzzy matching.
@@ -190,18 +236,19 @@ Get movie recommendations based on content similarity.
 **Response:**
 ```json
 {
-  "source_movie": "The Matrix",
+  "title": "The Matrix",
+  "query_title": "The Matrix",
   "recommendations": [
     {
+      "ID": 2113,
       "primaryTitle": "The Matrix Reloaded",
       "startYear": 2003,
       "averageRating": 7.2,
-      "numVotes": 573056,
+      "numVotes": 657445,
       "tconst": "tt0234215",
-      "score": 0.85
+      "score": 1.0000000000000002
     }
-  ],
-  "count": 1
+  ]
 }
 ```
 
@@ -209,9 +256,9 @@ Get movie recommendations based on content similarity.
 
 **Backend Optimizations:**
 - Database indexes on movie titles and ratings
-- TF-IDF vectors pre-computed and stored
-- Query result caching in memory
-- Batch processing for similarity calculations
+- TF-IDF vectors pre-computed and loaded in memory
+- Cosine similarity calculated using NumPy operations
+- Efficient matrix operations for recommendation generation
 
 **Frontend Optimizations:**
 - Request debouncing to reduce API calls
