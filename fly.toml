@@ -8,6 +8,7 @@ primary_region = 'lhr'
 
 [build]
   dockerfile = "backend/Dockerfile"
+  context = "."
 
 
 [http_service]

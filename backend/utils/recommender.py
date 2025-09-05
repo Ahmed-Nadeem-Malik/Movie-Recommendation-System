@@ -15,9 +15,9 @@ def load_data():
     if matrix is not None:
         return  # Already loaded
 
-    # Go up from backend/utils/ to project root, then to data/models
+    # In container: /app/utils/recommender.py -> /app/data/models
     current_dir = os.path.dirname(__file__)
-    data_path = os.path.join(current_dir, "..", "..", "data", "models")
+    data_path = os.path.join(current_dir, "..", "data", "models")
 
     # Load the files
     matrix = joblib.load(os.path.join(data_path, "tfidf_matrix.joblib"))
