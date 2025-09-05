@@ -4,7 +4,7 @@ A full-stack web application that recommends movies from IMDb's Top 5000 dataset
 
 ## 🚀 Live Demo
 
-- **Frontend:** https://movie-recommendation-system-p41ucrff4.vercel.app/
+- **Frontend:** https://movie-recommendation-system-orpin.vercel.app/
 - **Backend API:** https://movie-recommendation-backend.fly.dev/
 - **API Documentation:** https://movie-recommendation-backend.fly.dev/docs
 
