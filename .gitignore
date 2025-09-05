@@ -59,6 +59,18 @@ Thumbs.db
 *.log
 logs/
 
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.pnpm-debug.log*
+
+# React build
+dist/
+build/
+
 # Models and data (comment out if you want to track these)
 # *.joblib
 # *.pkl
