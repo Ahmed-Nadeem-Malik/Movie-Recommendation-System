@@ -25,7 +25,8 @@ app.add_middleware(
         "http://127.0.0.1:3000", 
         "http://localhost:5173", 
         "http://localhost:5174",
-        "https://movie-recommendation-system-p41ucrff4.vercel.app"
+        "https://movie-recommendation-system-p41ucrff4.vercel.app",
+        "https://movie-recommendation-system-orpin.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
