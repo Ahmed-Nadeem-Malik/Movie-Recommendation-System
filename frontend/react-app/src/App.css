@@ -187,6 +187,35 @@
   position: relative;
 }
 
+.poster-container {
+  position: relative;
+  width: 80px;
+  height: 120px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.poster-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.poster-loading {
+  width: 80px;
+  height: 120px;
+  background: rgba(245, 197, 24, 0.1);
+  border: 2px dashed rgba(245, 197, 24, 0.3);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: pulse 2s infinite;
+}
+
 .poster-placeholder {
   width: 80px;
   height: 120px;
