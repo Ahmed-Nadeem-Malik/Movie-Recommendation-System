@@ -9,8 +9,14 @@ interface Props {
 }
 
 /**
- * Search component with typeahead functionality.
- * Debounces input and displays matching movie results in a dropdown.
+ * MovieSearch Component
+ *
+ * Provides a search input with typeahead dropdown functionality.
+ * Features:
+ * - 1-second debounced search to prevent API spam
+ * - Shows loading indicator during search
+ * - Dropdown with movie results (title, year, rating)
+ * - Minimum 2 characters required for search
  */
 export function MovieSearch({
     query,
@@ -50,10 +56,12 @@ export function MovieSearch({
         setShowDropdown(searchResults.length > 0 && inputValue.length >= 2);
     }, [searchResults, inputValue]);
 
+    // Handle user typing in search input
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
     };
 
+    // Handle movie selection from dropdown
     const handleMovieClick = (movie: Movie) => {
         setInputValue("");
         setShowDropdown(false);
@@ -103,4 +111,3 @@ export function MovieSearch({
         </div>
     );
 }
-

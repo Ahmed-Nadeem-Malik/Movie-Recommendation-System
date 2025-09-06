@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:neovim": "eslint --config .eslintrc.neovim.json .",
+    "lint:check": "eslint --print-config src/App.tsx",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -92,4 +92,3 @@ export function useOMDB(imdbId?: string) {
 
     return { poster, loading, error };
 }
-

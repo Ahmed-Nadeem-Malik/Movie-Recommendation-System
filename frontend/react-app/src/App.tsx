@@ -6,8 +6,18 @@ import type { Movie, Recommendation } from "./types";
 import "./App.css";
 
 /**
- * Main application component that orchestrates movie search and recommendations.
- * Manages the core user flow: search → select → get recommendations.
+ * App Component - Main Application Container
+ *
+ * Orchestrates the complete movie recommendation flow:
+ * 1. User searches for movies via MovieSearch component
+ * 2. User selects a movie from search results
+ * 3. App fetches and displays movie recommendations
+ *
+ * Features:
+ * - Centralized state management for all components
+ * - Error handling with retry functionality
+ * - Loading states during API requests
+ * - Integration with backend API and OMDB poster service
  */
 function App() {
     const [query, setQuery] = useState("");

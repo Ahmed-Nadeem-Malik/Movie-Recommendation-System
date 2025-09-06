@@ -107,4 +107,3 @@ export function MovieCard({ movie, index }: Props) {
         </div>
     );
 }
-
