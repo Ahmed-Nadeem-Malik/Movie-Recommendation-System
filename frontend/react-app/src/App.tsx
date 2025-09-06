@@ -98,6 +98,8 @@ function App() {
                     <br />
                     Data from IMDb datasets • Posters from OMDB API • Not
                     affiliated with IMDb
+                    <br />
+                    Made by Ahmed Nadeem Malik
                 </small>
             </header>
 
