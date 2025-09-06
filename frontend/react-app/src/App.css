@@ -2,7 +2,7 @@
 .app {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
     font-family:
         -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -13,8 +13,8 @@
 /* Header */
 .app-header {
     text-align: center;
-    margin-bottom: 3rem;
-    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    padding: 2rem 1rem;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -23,14 +23,14 @@
 .app-header h1 {
     color: #f5c518;
     margin-bottom: 1rem;
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 600;
     letter-spacing: -1px;
 }
 
 .app-header p {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 400;
 }
 
@@ -113,6 +113,7 @@
     gap: 0.5rem;
     transition: all 0.2s ease;
     background: #1a1a1a;
+    min-height: 44px; /* Better touch target size */
 }
 
 .search-result:hover,
@@ -155,8 +156,8 @@
 /* Recommendation Grid */
 .recommendation-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
 }
 
 .movie-card {
@@ -324,13 +325,14 @@
     background: #f5c518;
     color: #000000;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
     border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 600;
     transition: all 0.2s ease;
     margin-top: auto;
     width: fit-content;
+    min-height: 44px; /* Better touch target size */
 }
 
 .imdb-link:hover {
@@ -402,20 +404,65 @@
     background: #c0392b;
 }
 
+/* Mobile-specific improvements */
+@media (max-width: 767px) {
+    .movie-card {
+        min-height: auto;
+    }
+    
+    .movie-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .movie-title {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+    
+    .movie-rating-row {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    
+    .search-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
 /* Tablet styles */
 @media (min-width: 768px) {
     .app {
         padding: 2rem;
     }
+    
+    .app-header {
+        padding: 3rem 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .app-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .app-header p {
+        font-size: 1.1rem;
+    }
 
     .recommendation-grid {
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
     }
 }
 
 /* Desktop styles */
 @media (min-width: 1024px) {
+    .app-header h1 {
+        font-size: 3rem;
+    }
+    
     .recommendation-grid {
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     }
 }

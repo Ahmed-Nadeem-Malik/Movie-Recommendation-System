@@ -1,3 +1,7 @@
+"""
+API routes for movie recommendation system.
+Handles movie search, recommendations, and database queries.
+"""
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -5,7 +9,7 @@ import sys
 import os
 import re
 
-# Add parent directory to path
+# Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from data.database import SessionLocal
@@ -15,6 +19,7 @@ from utils.recommender import recommend_by_title
 router = APIRouter()
 
 def get_db():
+    """Database session dependency."""
     db = SessionLocal()
     try:
         yield db
@@ -23,14 +28,14 @@ def get_db():
 
 
 def normalize_title(title):
-    """Clean up movie titles so 'The Matrix' matches 'matrix' searches."""
+    """
+    Clean movie titles for better search matching.
+    Removes articles (the, a, an) and normalizes punctuation.
+    """
     title = title.lower().strip()
-    # Drop 'The', 'A', 'An' from the beginning - they mess up searches
-    title = re.sub(r'^(the|a|an)\s+', '', title)
-    # Replace punctuation with spaces so "Spider-Man" becomes "spider man"
-    title = re.sub(r'[^\w\s]', ' ', title)
-    # Clean up any double spaces that got created
-    title = re.sub(r'\s+', ' ', title).strip()
+    title = re.sub(r'^(the|a|an)\s+', '', title)  # Remove articles
+    title = re.sub(r'[^\w\s]', ' ', title)        # Replace punctuation with spaces
+    title = re.sub(r'\s+', ' ', title).strip()    # Clean multiple spaces
     return title
 
 
@@ -130,74 +135,49 @@ def search_movies(
 
 @router.get("/recommend/", tags=["recommendations"])
 def get_recommendations(
-    title: str = Query(
-        ..., min_length=1, description="Movie title for recommendations"
-    ),
+    title: str = Query(..., min_length=1, description="Movie title for recommendations"),
     k: int = Query(10, ge=1, le=50, description="Number of recommendations"),
-    min_rating: float = Query(None, ge=0, le=10, description="Minimum rating filter"),
-    min_votes: int = Query(None, ge=0, description="Minimum votes filter"),
-    year_from: int = Query(None, ge=1900, description="Minimum year filter"),
-    year_to: int = Query(None, le=2030, description="Maximum year filter"),
-    fuzzy: bool = Query(False, description="Enable fuzzy title matching"),
+    fuzzy: bool = Query(True, description="Enable fuzzy title matching"),
     db: Session = Depends(get_db),
 ):
-    """Get movie recommendations with filtering. Can fall back to fuzzy search if exact title fails."""
-    
+    """
+    Get movie recommendations based on content similarity.
+    Uses fuzzy matching to handle typos and variations in movie titles.
+    """
     resolved_title = title
     
-    # If fuzzy is enabled, try to fix typos when exact match fails
-    if fuzzy:
-        try:
-            result = recommend_by_title(title, k)
-            if "error" in result:
-                # Movie not found - let's try finding something close
-                search_sql = text(
-                    """
-                    SELECT primarytitle, similarity(LOWER(primarytitle), LOWER(:q)) as sim
-                    FROM movies 
-                    WHERE LOWER(primarytitle) % LOWER(:q)
-                    ORDER BY sim DESC LIMIT 1
-                    """
-                )
-                search_result = db.execute(search_sql, {"q": title}).fetchone()
-                if search_result:
-                    resolved_title = search_result[0]
-                    result = recommend_by_title(resolved_title, k)
-        except:
-            # Something went wrong, just try the original title
-            result = recommend_by_title(title, k)
-    else:
-        result = recommend_by_title(title, k)
+    # Try to get recommendations
+    result = recommend_by_title(title, k)
+    
+    # If movie not found and fuzzy is enabled, try to find similar title
+    if "error" in result and fuzzy:
+        similar_title = _find_similar_title(db, title)
+        if similar_title:
+            resolved_title = similar_title
+            result = recommend_by_title(resolved_title, k)
 
     if "error" in result:
         raise HTTPException(status_code=404, detail=result["error"])
 
-    # Filter out movies that don't meet the criteria
-    if "recommendations" in result:
-        filtered = []
-        for rec in result["recommendations"]:
-            # Skip movies below rating threshold
-            if min_rating and rec.get("averageRating", 0) < min_rating:
-                continue
-            # Skip movies with too few votes
-            if min_votes and rec.get("numVotes", 0) < min_votes:
-                continue
-            # Skip old movies
-            if year_from and rec.get("startYear", 0) < year_from:
-                continue
-            # Skip new movies
-            if year_to and rec.get("startYear", 9999) > year_to:
-                continue
-            
-            filtered.append(rec)
-        
-        # Take only k movies after filtering
-        result["recommendations"] = filtered[:k]
-    
     # Add metadata for frontend
     result["query_title"] = title
     if resolved_title != title:
         result["resolved_title"] = resolved_title
         
     return result
+
+
+def _find_similar_title(db: Session, title: str):
+    """Helper function to find similar movie title using fuzzy matching."""
+    search_sql = text(
+        """
+        SELECT "primaryTitle"
+        FROM movies 
+        WHERE LOWER("primaryTitle") % LOWER(:q)
+        ORDER BY similarity(LOWER("primaryTitle"), LOWER(:q)) DESC 
+        LIMIT 1
+        """
+    )
+    result = db.execute(search_sql, {"q": title}).fetchone()
+    return result[0] if result else None
 
