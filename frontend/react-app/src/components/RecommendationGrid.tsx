@@ -56,13 +56,12 @@ export function RecommendationGrid({
     return (
         <div className="recommendation-grid">
             {recommendations.map((movie, index) => (
-                <MovieCard 
-                    key={movie.id || index} 
-                    movie={movie} 
-                    index={index} 
+                <MovieCard
+                    key={movie.id || index}
+                    movie={movie}
+                    index={index}
                 />
             ))}
         </div>
     );
 }
-

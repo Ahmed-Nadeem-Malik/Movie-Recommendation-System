@@ -13,10 +13,12 @@ function App() {
     const [query, setQuery] = useState("");
     const [selectedTitle, setSelectedTitle] = useState("");
     const [searchResults, setSearchResults] = useState<Movie[]>([]);
-    const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+    const [recommendations, setRecommendations] = useState<Recommendation[]>(
+        [],
+    );
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    
+
     const { searchMovies, getRecommendations } = useAPI();
 
     /**
@@ -34,7 +36,10 @@ function App() {
             try {
                 const result = await getRecommendations(movie.primarytitle, 10);
 
-                if (result.recommendations && result.recommendations.length > 0) {
+                if (
+                    result.recommendations &&
+                    result.recommendations.length > 0
+                ) {
                     setRecommendations(result.recommendations);
                 } else {
                     setError("No recommendations found for this movie");
@@ -91,7 +96,8 @@ function App() {
                 >
                     Educational use only • Not for commercial use
                     <br />
-                    Data from IMDb datasets • Posters from OMDB API • Not affiliated with IMDb
+                    Data from IMDb datasets • Posters from OMDB API • Not
+                    affiliated with IMDb
                 </small>
             </header>
 
