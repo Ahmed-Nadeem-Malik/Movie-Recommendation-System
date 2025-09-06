@@ -6,15 +6,24 @@ interface Props {
   index: number;
 }
 
+/**
+ * MovieCard Component
+ * 
+ * Displays individual movie recommendations with poster images from OMDB API.
+ * Shows movie title, year, rating, similarity score, and IMDb link.
+ */
 export function MovieCard({ movie, index }: Props) {
+  // Fetch poster image using movie's IMDb ID (tconst)
   const { poster, loading: posterLoading } = useOMDB(movie.tconst);
 
+  // Generate IMDb URL from tconst
   const getIMDbLink = (tconst?: string) => {
     return tconst ? `https://www.imdb.com/title/${tconst}/` : null;
   };
 
   return (
     <div className="movie-card">
+      {/* Poster section with ranking badge */}
       <div className="movie-poster">
         {posterLoading ? (
           <div className="poster-loading">
@@ -27,7 +36,7 @@ export function MovieCard({ movie, index }: Props) {
               alt={`${movie.primaryTitle} poster`}
               className="poster-image"
               onError={(e) => {
-                // Fallback to placeholder if image fails to load
+                // Show placeholder if poster fails to load
                 e.currentTarget.style.display = 'none';
                 e.currentTarget.parentElement!.innerHTML = `
                   <div class="poster-placeholder">
@@ -45,6 +54,7 @@ export function MovieCard({ movie, index }: Props) {
         )}
       </div>
       
+      {/* Movie information section */}
       <div className="movie-content">
         <div className="movie-header">
           <h3 className="movie-title">{movie.primaryTitle}</h3>
@@ -53,6 +63,7 @@ export function MovieCard({ movie, index }: Props) {
           )}
         </div>
 
+        {/* Rating and similarity score */}
         <div className="movie-rating-row">
           {movie.averageRating && (
             <div className="rating-container">
@@ -68,12 +79,14 @@ export function MovieCard({ movie, index }: Props) {
           )}
         </div>
 
+        {/* Vote count */}
         {movie.numVotes && (
           <div className="movie-votes">
             {movie.numVotes.toLocaleString()} votes
           </div>
         )}
 
+        {/* IMDb link */}
         {movie.tconst && (
           <a
             href={getIMDbLink(movie.tconst)!}

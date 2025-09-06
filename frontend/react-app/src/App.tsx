@@ -91,7 +91,7 @@ function App() {
                 >
                     Educational use only • Not for commercial use
                     <br />
-                    Data from IMDb datasets • Not affiliated with IMDb
+                    Data from IMDb datasets • Posters from OMDB API • Not affiliated with IMDb
                 </small>
             </header>
 

@@ -1,6 +1,6 @@
 # Movie Recommendation System
 
-A full-stack web application that recommends movies from IMDb's Top 5000 dataset using content-based filtering with TF-IDF similarity scoring.
+A full-stack web application that recommends movies from IMDb's Top 5000 dataset using content-based filtering with TF-IDF similarity scoring. Movie posters provided by [OMDB API](https://www.omdbapi.com/).
 
 ## 🚀 Live Demo
 
@@ -12,6 +12,8 @@ A full-stack web application that recommends movies from IMDb's Top 5000 dataset
 
 - **Smart Search:** Type movie titles with fuzzy matching and typo tolerance
 - **Content-Based Recommendations:** Get similar movies using TF-IDF and cosine similarity
+- **Movie Posters:** Real poster images from OMDB API with fallback placeholders
+- **IMDb Integration:** Direct links to movie pages on IMDb
 - **Real-time Results:** Debounced search with caching for optimal performance  
 - **Responsive Design:** Works on desktop and mobile devices
 - **Production Deployment:** Backend on Fly.io, Frontend on Vercel
@@ -33,10 +35,12 @@ Movie-Recommendation-System/
 │       │   ├── App.css        # Main application styles
 │       │   ├── main.tsx       # React app entry point
 │       │   ├── components/    # Reusable UI components
-│       │   │   ├── MovieSearch.tsx
-│       │   │   └── RecommendationGrid.tsx
+│       │   │   ├── MovieSearch.tsx      # Search input with dropdown
+│       │   │   ├── MovieCard.tsx        # Individual movie cards
+│       │   │   └── RecommendationGrid.tsx # Grid layout for movies
 │       │   ├── hooks/         # Custom React hooks
-│       │   │   └── useAPI.ts
+│       │   │   ├── useAPI.ts           # Backend API integration
+│       │   │   └── useOMDB.ts          # OMDB poster API integration
 │       │   └── types.ts       # TypeScript type definitions
 │       └── package.json       # Node.js dependencies
 ├── data/                      # IMDb dataset files and database models
@@ -75,10 +79,16 @@ Movie-Recommendation-System/
 - `App.tsx` - Main application state and layout
 - `MovieSearch.tsx` - Search input with typeahead dropdown
 - `RecommendationGrid.tsx` - Grid display of recommended movies
+- `MovieCard.tsx` - Individual movie cards with poster integration
+
+**Custom Hooks:**
+- `useAPI.ts` - Backend API calls with caching and error handling
+- `useOMDB.ts` - OMDB API integration for movie posters
 
 **Key Features:**
 - Debounced search (1-second delay to prevent API spam)
 - Request caching (5-minute TTL to reduce server load)
+- Movie poster fetching with smart caching
 - Loading states and error handling
 - Responsive design with CSS Grid
 
@@ -99,6 +109,7 @@ Movie-Recommendation-System/
    - Calculates similarity scores against all other movies
    - Returns top 10 most similar movies
    - Frontend displays recommendation cards with:
+     - Movie poster from OMDB API (with fallback placeholder)
      - Movie title, year, rating, vote count
      - Similarity match percentage
      - Link to IMDb page
@@ -135,6 +146,7 @@ Movie-Recommendation-System/
 - Vite (build tool)
 - CSS Grid (responsive layout)
 - Fetch API with AbortController (HTTP requests)
+- OMDB API integration for movie posters
 - Deployed on Vercel
 
 ## Setup Instructions
@@ -159,8 +171,11 @@ uvicorn main:app --reload --port 8000
 cd frontend/react-app
 npm install
 
-# Set API endpoint (optional)
+# Set environment variables
 echo "VITE_API_BASE=http://localhost:8000/api/v1" > .env
+echo "VITE_OMDB_API_KEY=your_omdb_api_key" >> .env
+
+# Get OMDB API key from: https://www.omdbapi.com/apikey.aspx
 
 # Start development server
 npm run dev
@@ -263,6 +278,7 @@ Get movie recommendations based on content similarity.
 **Frontend Optimizations:**
 - Request debouncing to reduce API calls
 - Response caching with TTL
+- OMDB poster caching to minimize API requests
 - Request cancellation to prevent memory leaks
 - Lazy loading and skeleton screens
 
@@ -272,4 +288,5 @@ This project is for educational purposes only. Movie data comes from IMDb datase
 
 ## Dataset Attribution
 
-Data courtesy of IMDb (https://www.imdb.com). Used in accordance with IMDb's terms of service for non-commercial educational use.
+- **Movie Data:** Courtesy of IMDb (https://www.imdb.com). Used in accordance with IMDb's terms of service for non-commercial educational use.
+- **Movie Posters:** Provided by The Open Movie Database (OMDB) API (https://www.omdbapi.com/). Used under their terms of service.
