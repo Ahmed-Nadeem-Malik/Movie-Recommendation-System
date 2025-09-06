@@ -60,40 +60,41 @@ export function RecommendationGrid({
         <div className="recommendation-grid">
             {recommendations.map((movie, index) => (
                 <div key={movie.id || index} className="movie-card">
-                    <div className="movie-info">
-                        <h3 className="movie-title">{movie.primaryTitle}</h3>
-
-                        <div className="movie-details">
+                    <div className="movie-poster">
+                        <div className="poster-placeholder">
+                            <span className="movie-rank">#{index + 1}</span>
+                        </div>
+                    </div>
+                    
+                    <div className="movie-content">
+                        <div className="movie-header">
+                            <h3 className="movie-title">{movie.primaryTitle}</h3>
                             {movie.startYear && (
-                                <span className="movie-year">
-                                    {movie.startYear}
-                                </span>
-                            )}
-
-                            {movie.averageRating && (
-                                <span className="movie-rating">
-                                    ★ {movie.averageRating.toFixed(1)}
-                                </span>
-                            )}
-
-                            {movie.numVotes && (
-                                <span className="movie-votes">
-                                    ({movie.numVotes.toLocaleString()} votes)
-                                </span>
+                                <span className="movie-year">({movie.startYear})</span>
                             )}
                         </div>
 
-                        {(movie.score || movie.similarity_score) && (
-                            <div className="similarity-score">
-                                Match:{" "}
-                                {(
-                                    (movie.score ||
-                                        movie.similarity_score ||
-                                        0) * 100
-                                ).toFixed(0)}
-                                %
+                        <div className="movie-rating-row">
+                            {movie.averageRating && (
+                                <div className="rating-container">
+                                    <span className="rating-star">★</span>
+                                    <span className="rating-value">{movie.averageRating.toFixed(1)}</span>
+                                </div>
+                            )}
+                            
+                            {(movie.score || movie.similarity_score) && (
+                                <div className="similarity-badge">
+                                    {((movie.score || movie.similarity_score || 0) * 100).toFixed(0)}% match
+                                </div>
+                            )}
+                        </div>
+
+                        {movie.numVotes && (
+                            <div className="movie-votes">
+                                {movie.numVotes.toLocaleString()} votes
                             </div>
                         )}
+
                         {movie.tconst && (
                             <a
                                 href={getIMDbLink(movie.tconst)!}
@@ -101,7 +102,7 @@ export function RecommendationGrid({
                                 rel="noopener noreferrer"
                                 className="imdb-link"
                             >
-                                View on IMDb
+                                View on IMDb →
                             </a>
                         )}
                     </div>
